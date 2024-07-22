@@ -1,0 +1,64 @@
+//usando a unity
+using UnityEngine;
+//usando unity .ui
+using UnityEngine.UI;
+
+//codigo da pasta player controller
+public class PlayerController : MonoBehaviour
+{
+    //a velocidade é 5f
+    public float speed = 5f;
+    //usando rigid body
+    private Rigidbody2D rb;
+    // a pontuaçao inicial é 0
+    private int score = 0;
+    // placar
+    public Text scoreText;
+
+    //inicia o jogo
+    void Start()
+    {
+        //inicia o componente rigid body
+        rb = GetComponent<Rigidbody2D>();
+        //inicia a atualizaçao do placar
+        UpdateScoreText();
+    }
+    
+    //atualizaçao por frame
+    void Update()
+    {
+        //movimento horizontal esta para as teclas (a/d)
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        //movimento vertical está para as teclas (w/s)
+        float moveVertical = Input.GetAxis("Vertical");
+        //vetor de movimento é atualizado para funcionar a partir do movimento vertical e horizontal
+        Vector2 movement = new Vector2(moveHorizontal, moveVertical);
+        //a velocidade de movimento é multiplicada a partir do vetor movimento
+        rb.velocity = movement * speed;
+    }
+    
+    //verifica se o player encostou com o object 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        //se o objeto coin encostar no player
+        if (other.gameObject.CompareTag("Coin"))
+        {
+            //destruir o objeto 
+            Destroy(other.gameObject);
+            // aumenta a pontuaçao
+            score++;
+            // atualiza o placar
+            UpdateScoreText();
+        }
+
+        //e se o inimigo encostar no player
+        else if (other.gameObject.CompareTag("Enemy"))
+    }
+ 
+    //atualiza o placara
+    void UpdateScoreText()
+    {
+        //faz com que o placar se iguale a pontuaçao real
+        scoreText.text = "Score: " + score.ToString();
+    }
+}
